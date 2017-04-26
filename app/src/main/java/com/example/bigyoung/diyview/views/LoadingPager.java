@@ -18,13 +18,13 @@ public abstract class LoadingPager extends FrameLayout {
     /**
      * LodingPager的四种状态
      */
-    public final int LONDING_STATE = 1;
-    public final int FAILED_STATE = 2;
-    public final int SUCCESS_STATE = 3;
-    public final int EMPTY_STATE = 4;
+    public static final int LONDING_STATE = 1;
+    public static final int FAILED_STATE = 2;
+    public static final int SUCCESS_STATE = 3;
+    public static final int EMPTY_STATE = 4;
 
     public int mCurrentState = LONDING_STATE;
-    private View mError;
+    private View mFailed;
     private View mEmpty;
     private View mLoading;
 
@@ -40,9 +40,10 @@ public abstract class LoadingPager extends FrameLayout {
 
     public LoadingPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mError = LinearLayout.inflate(context, R.layout.pager_error, LoadingPager.this);
-        mEmpty = LinearLayout.inflate(context, R.layout.pager_empty, LoadingPager.this);
-        mLoading = LinearLayout.inflate(context, R.layout.pager_loading, LoadingPager.this);
+        mFailed = LinearLayout.inflate(context, R.layout.pager_error, null);
+        mEmpty = LinearLayout.inflate(context, R.layout.pager_empty, null);
+        mLoading = LinearLayout.inflate(context, R.layout.pager_loading, null);
+        LoadingPager.this.addView(mEmpty);
 
     }
 
@@ -52,7 +53,8 @@ public abstract class LoadingPager extends FrameLayout {
     public void startLoadingData() {
         //置为加载状态，显示加载状态下的图片
         setCurrentState(LONDING_STATE);
-        refreashViewByCurrentState();
+        refreshView(mLoading);
+
         //开启加载任务
         new Thread(new NetConnecttionForData()).start();
     }
@@ -82,26 +84,35 @@ public abstract class LoadingPager extends FrameLayout {
     private void operationByCurrentState() {
         switch (mCurrentState) {
             case SUCCESS_STATE:
-                resposeForSuccess(LoadingPager.this);
-                refreashViewByCurrentState();
+                //refreashViewByCurrentState();
+                refreshView(resposeForSuccess(LoadingPager.this));
                 break;
             case FAILED_STATE:
-                refreashViewByCurrentState();
+                //refreashViewByCurrentState();
+                refreshView(mFailed);
                 break;
             case EMPTY_STATE:
-                refreashViewByCurrentState();
+                //refreashViewByCurrentState();
+                refreshView(mEmpty);
                 break;
             default:
                 break;
         }
     }
-
-    /**
+/*
+    *//**
      * 更新页面
-     *
-     */
+     *//*
     public void refreashViewByCurrentState() {
-        mEmpty.setVisibility(mCurrentState==EMPTY_STATE?View.VISIBLE:View.INVISIBLE);
+        //mEmpty.setVisibility(mCurrentState==EMPTY_STATE?View.VISIBLE:View.INVISIBLE);
+    }
+    */
+    //替换view来刷新
+    public void refreshView(View view){
+        LoadingPager.this.removeAllViews();
+        if(view==null)
+            view= mFailed;
+        LoadingPager.this.addView(view);
     }
 
     /**

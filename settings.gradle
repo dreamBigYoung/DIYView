@@ -1,1 +1,1 @@
-include ':app', ':pageslidingtab'
+include ':app', ':pageslidingtab', ':fragmenttab'

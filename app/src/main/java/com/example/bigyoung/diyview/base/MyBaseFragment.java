@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import com.example.bigyoung.diyview.R;
 import com.example.bigyoung.diyview.views.LoadingPager;
 
 /**
@@ -35,6 +37,7 @@ public abstract class MyBaseFragment extends Fragment {
                 return MyBaseFragment.this.resposeForSuccess(viewGroup);
             }
         };
+        FrameLayout.LayoutParams layoutParams;
         return mLoadingPager;
     }
 

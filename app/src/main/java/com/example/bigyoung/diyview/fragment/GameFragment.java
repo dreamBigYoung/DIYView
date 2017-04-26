@@ -17,15 +17,6 @@ import com.example.bigyoung.diyview.utils.UIUtils;
  * 描述	      ${TODO}
  */
 public class GameFragment extends MyBaseFragment {
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        TextView tv = new TextView(UIUtils.getContext());
-        tv.setGravity(Gravity.CENTER);
-        tv.setText(this.getClass().getSimpleName());//"HomeFragment"
-        return tv;
-    }
-
     @Override
     public int loadingDataFromServer() {
         return 0;

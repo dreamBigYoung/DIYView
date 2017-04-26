@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.astuetz.PagerSlidingTabStripEnter;
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager mContentView;
     private String[] titleSring = {"草莓", "菠萝", "蓝莓"};
     private List<String> titleList;
-    private List<Fragment> fragList;
+    //private List<Fragment> fragList;
     private MyPagerAdapter mMAdapter;
     private MyPageChangedListener mMyPageChangedListener;
 
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        // mContentView= (ViewPager) findViewById(R.id.content_view);
+        mContentView = (ViewPager) findViewById(R.id.content_view);
         initData();
         initAdapter();
         initViewPager();
@@ -101,14 +99,13 @@ public class MainActivity extends AppCompatActivity {
             titleList.add(titleSring[i]);
         }
         //创造List of fragment
-        fragList = new ArrayList<Fragment>();
+       /* fragList = new ArrayList<Fragment>();
         for (int i = 0; i < len; i++) {
             fragList.add(FragmentFactory.createFragment(i));
-        }
-
+        }*/
     }
 
-    private class MyPagerAdapter extends FragmentStatePagerAdapter {
+    private class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -118,25 +115,23 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             if (titleList != null)
                 return titleList.size();
-            return 0;
+            else
+                return 0;
         }
 
         @Override
         public Fragment getItem(int position) {
             LogUtils.s("初始化->" + titleSring[position]);
-            Fragment fragment = fragList.get(position);
-            return fragment;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
+          /*  Fragment fragment = fragList.get(position);
+            return fragment;*/
+            return FragmentFactory.createFragment(position);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return titleList.get(position);
         }
+
     }
 
     private class MyPageChangedListener implements ViewPager.OnPageChangeListener {
@@ -148,11 +143,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if(fragList!=null){
-                MyBaseFragment baseFrag= (MyBaseFragment) fragList.get(position);
+           /* if (fragList != null) {
+                MyBaseFragment baseFrag = (MyBaseFragment) fragList.get(position);
                 //start refreash
                 baseFrag.refreshData();
-            }
+            }*/
+            MyBaseFragment baseFrag = (MyBaseFragment) FragmentFactory.mCacheFragments.get(position);
+            //start refreash
+            baseFrag.refreshData();
         }
 
         @Override

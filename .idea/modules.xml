@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DIYView.iml" filepath="$PROJECT_DIR$/DIYView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fragmenttab/fragmenttab.iml" filepath="$PROJECT_DIR$/fragmenttab/fragmenttab.iml" />
       <module fileurl="file://$PROJECT_DIR$/pageslidingtab/pageslidingtab.iml" filepath="$PROJECT_DIR$/pageslidingtab/pageslidingtab.iml" />
     </modules>
   </component>

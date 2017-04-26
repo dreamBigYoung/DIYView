@@ -2,6 +2,7 @@ package com.example.bigyoung.diyview.factory;
 
 import android.support.v4.app.Fragment;
 
+import com.example.bigyoung.diyview.base.MyBaseFragment;
 import com.example.bigyoung.diyview.fragment.AppFragment;
 import com.example.bigyoung.diyview.fragment.CategoryFragment;
 import com.example.bigyoung.diyview.fragment.GameFragment;
@@ -9,12 +10,11 @@ import com.example.bigyoung.diyview.fragment.HomeFragment;
 import com.example.bigyoung.diyview.fragment.HotFragment;
 import com.example.bigyoung.diyview.fragment.RecommendFragment;
 import com.example.bigyoung.diyview.fragment.SubjectFragment;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 创建者     伍碧林
- * 版权       传智播客.黑马程序员
- * 描述	      封装对Fragment的创建
+ *  封装对Fragment的创建的工厂类
  */
 public class FragmentFactory {
     public static final int FRAGMENT_HOME = 0;//首页
@@ -25,9 +25,18 @@ public class FragmentFactory {
     public static final int FRAGMENT_CATEGORY = 5;//分类
     public static final int FRAGMENT_HOT = 6;//排行
 
-    public static Fragment createFragment(int position) {
+    /** 用于缓存Fragment的实例 */
+    public static Map<Integer, MyBaseFragment> mCacheFragments = new HashMap<>();
+
+    public static MyBaseFragment createFragment(int position) {
         //定义Fragment对象
-        Fragment fragment = null;
+        MyBaseFragment fragment = null;
+
+        //优先缓存集合中取出来
+        if (mCacheFragments.containsKey(position)) {
+            fragment = mCacheFragments.get(position);
+            return fragment;
+        }
 
         switch (position) {
             case FRAGMENT_HOME://返回 首页 对应的fragment
@@ -51,10 +60,10 @@ public class FragmentFactory {
             case FRAGMENT_HOT://返回 排行 对应的fragment
                 fragment = new HotFragment();
                 break;
-
-            default:
-                break;
         }
+        //保存Fragment到集合中
+        mCacheFragments.put(position, fragment);
         return fragment;
     }
 }
+
