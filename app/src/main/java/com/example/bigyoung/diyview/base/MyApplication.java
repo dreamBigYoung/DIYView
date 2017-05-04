@@ -3,12 +3,13 @@ package com.example.bigyoung.diyview.base;
 import android.app.Application;
 import android.content.Context;
 import android.os.*;
+import android.support.v4.util.LruCache;
 
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 创建者     伍碧林
- * 版权       传智播客.黑马程序员
- * 描述	      全局单例
+
  * 描述	      易错点:需要在清单文件里面进行配置
  */
 public class MyApplication extends Application {
@@ -16,6 +17,12 @@ public class MyApplication extends Application {
     private static Context mContext;
     private static Handler mMainThreadHandler;
     private static int mMainThreadId;
+    //用于存储联网返回的json string
+    private static Map<String,String> jsonStringCacheMap=new HashMap<String,String>();
+
+    public static Map<String, String> getJsonStringCacheMap() {
+        return jsonStringCacheMap;
+    }
 
     /**
      * 得到上下文

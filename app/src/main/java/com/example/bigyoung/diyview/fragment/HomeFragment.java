@@ -15,6 +15,7 @@ import com.example.bigyoung.diyview.R;
 import com.example.bigyoung.diyview.adapter.HomeFragAdapter;
 import com.example.bigyoung.diyview.base.MyBaseFragment;
 import com.example.bigyoung.diyview.bean.HomeResponseBean;
+import com.example.bigyoung.diyview.protocol.HomeFragProtocol;
 import com.example.bigyoung.diyview.utils.Constants;
 import com.example.bigyoung.diyview.utils.HttpUtils;
 import com.example.bigyoung.diyview.utils.MyToast;
@@ -40,11 +41,13 @@ import okhttp3.internal.http.HttpStream;
 public class HomeFragment extends MyBaseFragment {
 
     private HomeResponseBean mHomeBean;
+
     //private View mContent;
     private RecyclerView mRecycleView;
     private HomeFragAdapter mAdapter;
     private Context mContext;
     private LinearLayoutManager mManager;
+    private int mCurrentIndex=0;//当前页对应的索引
 
     @Nullable
     @Override
@@ -69,47 +72,31 @@ public class HomeFragment extends MyBaseFragment {
 
     @Override
     public int loadingDataFromServer() {
-        //创建OkHttpClient对象
-        OkHttpClient okHttpClient = new OkHttpClient();
-        //拼接要访问的URL
-        String url = Constants.HOST_URL + Constants.HOME_CATE;
-        //设置参数对应map
-        Map<String, Object> mapParams = new HashMap<String, Object>();
-        mapParams.put("index", 0);
-        //转为urlParams
-        String urlParamsByMap = HttpUtils.getUrlParamsByMap(mapParams);
-        //拼接
-        url = url + "?" + urlParamsByMap;
-        //创建request请求对象
-        Request request = new Request.Builder().get().url(url).build();
         //执行请求
+        HomeFragProtocol homePro = new HomeFragProtocol();
         try {
-            Response response = okHttpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                //请求成功
-                String jsonString = response.body().string();
-                Gson gson = new Gson();
-                mHomeBean = gson.fromJson(jsonString, HomeResponseBean.class);
-                //判断获得数据是否为空
-                if (mHomeBean == null || mHomeBean.getList() == null || mHomeBean.getList().size() == 0)
-                    return LoadingPager.EMPTY_STATE;
-                return LoadingPager.SUCCESS_STATE;
-            } else {
-                return ResultNetConnection.resultNetFailed(mContext);
-            }
+
+            mHomeBean = homePro.loadData(mCurrentIndex);
+            //判断获得数据是否为空
+            if (mHomeBean == null || mHomeBean.getList() == null || mHomeBean.getList().size() == 0)
+                return LoadingPager.EMPTY_STATE;
+            return LoadingPager.SUCCESS_STATE;
         } catch (IOException e) {
             e.printStackTrace();
-            return ResultNetConnection.resultNetFailed(mContext);
+            return LoadingPager.FAILED_STATE;
         }
     }
 
     @Override
     public View resposeForSuccess(ViewGroup viewGroup) {
-        if(mHomeBean!=null){
+        if (mHomeBean != null) {
             mAdapter.updateHomeBean(mHomeBean.getList());
             mAdapter.notifyDataSetChanged();
         }
         return mRecycleView;
     }
 
+    public void setCurrentIndex(int currentIndex) {
+        mCurrentIndex = currentIndex;
+    }
 }

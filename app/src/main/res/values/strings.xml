@@ -2,7 +2,8 @@
     <string name="app_name">DIYView</string>
     <string name="open">open</string>
     <string name="close">close</string>
-
+    <string name="no_more_data">已无更多数据</string>
+    <string name="load_data_error">加载失败,点击重试</string>
     <string-array name="main_titles">
         <item>首页</item>
         <item>应用</item>

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.example.bigyoung.diyview.R;
 import com.example.bigyoung.diyview.base.MyApplication;
+import com.example.bigyoung.diyview.utils.ResultNetConnection;
 
 /**
  * Created by BigYoung on 2017/4/23.
@@ -27,6 +28,7 @@ public abstract class LoadingPager extends FrameLayout {
     private View mFailed;
     private View mEmpty;
     private View mLoading;
+    private Context mContext;
 
     private View mSuccess;
 
@@ -40,6 +42,7 @@ public abstract class LoadingPager extends FrameLayout {
 
     public LoadingPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext=context;
         mFailed = LinearLayout.inflate(context, R.layout.pager_error, null);
         mEmpty = LinearLayout.inflate(context, R.layout.pager_empty, null);
         mLoading = LinearLayout.inflate(context, R.layout.pager_loading, null);
@@ -54,7 +57,6 @@ public abstract class LoadingPager extends FrameLayout {
         //置为加载状态，显示加载状态下的图片
         setCurrentState(LONDING_STATE);
         refreshView(mLoading);
-
         //开启加载任务
         new Thread(new NetConnecttionForData()).start();
     }
@@ -90,6 +92,7 @@ public abstract class LoadingPager extends FrameLayout {
             case FAILED_STATE:
                 //refreashViewByCurrentState();
                 refreshView(mFailed);
+                ResultNetConnection.resultNetFailed(mContext);
                 break;
             case EMPTY_STATE:
                 //refreashViewByCurrentState();
