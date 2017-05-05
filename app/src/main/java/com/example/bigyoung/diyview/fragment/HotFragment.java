@@ -18,6 +18,11 @@ import com.example.bigyoung.diyview.utils.UIUtils;
  */
 public class HotFragment extends MyBaseFragment {
     @Override
+    protected void initContent() {
+
+    }
+
+    @Override
     public int loadingDataFromServer() {
         return 0;
     }

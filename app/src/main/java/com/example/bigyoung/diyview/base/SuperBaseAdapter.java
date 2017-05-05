@@ -11,9 +11,14 @@ import android.widget.TextView;
 import com.example.bigyoung.diyview.R;
 import com.example.bigyoung.diyview.adapter.HomeFragAdapter;
 import com.example.bigyoung.diyview.bean.HomeResponseBean;
+import com.example.bigyoung.diyview.bean.ItemBean;
+import com.example.bigyoung.diyview.holder.ItemBeanViewHolder;
 import com.example.bigyoung.diyview.protocol.HomeFragProtocol;
 import com.example.bigyoung.diyview.utils.Constants;
+import com.example.bigyoung.diyview.utils.FixUrl;
+import com.example.bigyoung.diyview.utils.StringUtils;
 import com.example.bigyoung.diyview.views.LoadingPager;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,25 +31,31 @@ import butterknife.ButterKnife;
  */
 
 public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
-    private List<T> mItemList;
-    private Context mContext;
+    public List<ItemBean> mItemList;
+    public Context mContext;
     private BaseProtocol mProtocol;
     private static final int ITEMTYPE_HEAD = 1;
     private static final int ITEMTYPE_BODY = 2;
     private static final int ITEMTYPE_FOOT = 3;
 
     private int mLoadMoreState = LoadingPager.FAILED_STATE;//加载更多的操作结果
-    private List<T> mBeanInstance;//存放调用加载更多获得的结果集
+    private List<ItemBean> mBeanInstance;//存放调用加载更多获得的结果集
 
-    public SuperBaseAdapter(Context context) {
-        this(context, null,null);
-    }
-
-    public SuperBaseAdapter(Context context, List<T> mItemList,BaseProtocol baseProtocol) {
+    public SuperBaseAdapter(Context context, List<ItemBean> mItemList,BaseProtocol<T> baseProtocol) {
         this.mContext = context;
         this.mItemList = mItemList;
         this.mProtocol=baseProtocol;
     }
+
+    /**
+     * 更新homeBean
+     *
+     * @param mItemList
+     */
+    public void updateListBean(List<ItemBean> mItemList) {
+        this.mItemList = mItemList;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -159,7 +170,7 @@ public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
             try {
                 //获得待加载的页码
                 int nextPageIndex = mItemList.size() / Constants.PAGE_SIZE;
-                mBeanInstance = (List<T>) mProtocol.loadData(nextPageIndex);
+                mBeanInstance = getLoadMoreList(nextPageIndex,mProtocol);
                 //判断获得数据是否为空
                 if (mBeanInstance == null || mBeanInstance.size() == 0)
                     return LoadingPager.EMPTY_STATE;
@@ -172,11 +183,27 @@ public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
     }
 
     /**
+     * 获得加载更多的数据集合
+     * @param nextPageIndex
+     * @return
+     * @throws IOException
+     */
+    public abstract List<ItemBean> getLoadMoreList(int nextPageIndex,BaseProtocol<T> protocol) throws IOException;
+
+    /**
      * 填充bodyView
      * @param holder
      * @param position
      */
-    protected abstract void fixBodyHolder(RecyclerView.ViewHolder holder, int position);
+    protected void fixBodyHolder(RecyclerView.ViewHolder holder, int position) {
+        ItemBean bean = mItemList.get(position - 1);
+        ItemBeanViewHolder homeHolder = (ItemBeanViewHolder) holder;
+        homeHolder.mItemAppinfoTvTitle.setText(bean.getName());
+        homeHolder.mItemAppinfoTvSize.setText(StringUtils.formatFileSize(bean.getSize()));
+        homeHolder.mItemAppinfoRbStars.setRating(bean.getStars());
+        homeHolder.mItemAppinfoTvDes.setText(bean.getDes());
+        Picasso.with(mContext).load(FixUrl.fixUrlForImg(bean.getIconUrl())).into(homeHolder.mItemAppinfoIvIcon);
+    }
 
     /**
      * 填充headView
@@ -226,7 +253,12 @@ public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
      * @return
      * @param parent
      */
-    public abstract RecyclerView.ViewHolder getBodyViewHolder(ViewGroup parent);
+    public RecyclerView.ViewHolder getBodyViewHolder(ViewGroup parent) {
+        View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_home, parent, false);
+        ItemBeanViewHolder holder = new ItemBeanViewHolder(inflate);
+        return holder;
+    }
+
     static class ViewHolderLoadMore extends RecyclerView.ViewHolder {
         @BindView(R.id.item_loadmore_container_loading)
         LinearLayout mItemLoadmoreContainerLoading;

@@ -19,6 +19,11 @@ import com.example.bigyoung.diyview.utils.UIUtils;
 public class SubjectFragment extends MyBaseFragment {
 
     @Override
+    protected void initContent() {
+
+    }
+
+    @Override
     public int loadingDataFromServer() {
         return 0;
     }

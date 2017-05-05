@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.example.bigyoung.diyview.R;
 import com.example.bigyoung.diyview.views.LoadingPager;
 
 /**
@@ -18,15 +17,16 @@ import com.example.bigyoung.diyview.views.LoadingPager;
 
 public abstract class MyBaseFragment extends Fragment {
 
-    private Context mMContext;
+    public Context mContext;
 
     private LoadingPager mLoadingPager;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mMContext = getContext();
-        mLoadingPager = new LoadingPager(mMContext) {
+        mContext = getContext();
+        initContent();
+        mLoadingPager = new LoadingPager(mContext) {
             @Override
             public int loadingDataFormServer() {
                 return MyBaseFragment.this.loadingDataFromServer();
@@ -40,6 +40,10 @@ public abstract class MyBaseFragment extends Fragment {
         FrameLayout.LayoutParams layoutParams;
         return mLoadingPager;
     }
+    /**
+     * 初始化显示内容
+     */
+    protected abstract void initContent();
 
     /**
      * 刷新数据
