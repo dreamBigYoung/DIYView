@@ -202,6 +202,7 @@ public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
         homeHolder.mItemAppinfoTvSize.setText(StringUtils.formatFileSize(bean.getSize()));
         homeHolder.mItemAppinfoRbStars.setRating(bean.getStars());
         homeHolder.mItemAppinfoTvDes.setText(bean.getDes());
+        homeHolder.mItemAppinfoIvIcon.setTag(bean.getPackageName());
         Picasso.with(mContext).load(FixUrl.fixUrlForImg(bean.getIconUrl())).into(homeHolder.mItemAppinfoIvIcon);
     }
 
@@ -270,6 +271,8 @@ public abstract class SuperBaseAdapter<T> extends RecyclerView.Adapter {
         ViewHolderLoadMore(View view) {
             super(view);
             ButterKnife.bind(this, view);
+
         }
+
     }
 }

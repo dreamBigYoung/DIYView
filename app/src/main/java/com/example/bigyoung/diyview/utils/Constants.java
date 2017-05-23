@@ -21,6 +21,8 @@ public class Constants {
     public static final String APP_CATE=HOST_URL+"/app";
     //subject 分支
     public static final String SUBJECT_CATE=HOST_URL+"/subject";
+    //App detail 分支
+    public static final String APPDETAIL_CATE=HOST_URL+"/detail";
 
     public static final int PAGE_SIZE=20;
 

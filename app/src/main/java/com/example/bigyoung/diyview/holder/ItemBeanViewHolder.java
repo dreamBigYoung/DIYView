@@ -7,6 +7,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.bigyoung.diyview.R;
+import com.example.bigyoung.diyview.business.appdetail.JumpIntoAppDetail;
+import com.example.bigyoung.diyview.business.appdetail.impl.JumpIntoAppDetailImpl;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,5 +31,13 @@ public class ItemBeanViewHolder extends RecyclerView.ViewHolder {
     public ItemBeanViewHolder(View view) {
         super(view);
         ButterKnife.bind(this, view);
+        mItemAppinfoIvIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String itemId = (String)v.getTag();
+                JumpIntoAppDetail jump=new JumpIntoAppDetailImpl();
+                jump.jumIntoAppDetailActivity(itemId);
+            }
+        });
     }
 }

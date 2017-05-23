@@ -1,5 +1,7 @@
 package com.example.bigyoung.diyview.base;
 
+import android.support.annotation.NonNull;
+
 import com.example.bigyoung.diyview.utils.Constants;
 import com.example.bigyoung.diyview.utils.FileUtils;
 import com.example.bigyoung.diyview.utils.HttpUtils;
@@ -137,8 +139,7 @@ public abstract class BaseProtocol<ResultBean> {
         //拼接要访问的URL
         String url = getUrlCategory();
         //设置参数对应map
-        Map<String, Object> mapParams = new HashMap<String, Object>();
-        mapParams.put("index", index);
+        Map<String, Object> mapParams = getUrlParamMap(index);
         //转为urlParams
         String urlParamsByMap = HttpUtils.getUrlParamsByMap(mapParams);
         //拼接
@@ -163,6 +164,13 @@ public abstract class BaseProtocol<ResultBean> {
             throw new IOException();
             //return null;
         }
+    }
+
+    @NonNull
+    public Map<String, Object> getUrlParamMap(int index) {
+        Map<String, Object> mapParams = new HashMap<String, Object>();
+        mapParams.put("index", index);
+        return mapParams;
     }
 
     //保存在内存里
