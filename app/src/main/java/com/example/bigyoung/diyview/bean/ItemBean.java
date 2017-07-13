@@ -7,8 +7,6 @@ import java.util.List;
  */
 public class ItemBean {
     /**
-     * id : 1525489
-     * name : 黑马程序员
      * packageName : com.itheima.www
      * iconUrl : app/com.itheima.www/icon.jpg
      * stars : 5
